@@ -1,5 +1,8 @@
+# each training batch will eventually be a separate model thus,
+# the number of batches is the final number of models in the ensemble model
+
 import argparse
-from sbi.inference import SNPE, prepare_for_sbi, simulate_for_sbi
+from sbi.inference import prepare_for_sbi, simulate_for_sbi
 from sbi import utils as sbiutils
 import torch
 import os
@@ -37,7 +40,6 @@ def main(output_dir, number_of_batches=7, simulations_per_batch=1000):
     dir_paths = [os.path.join(output_dir,f'batch_{x}') for x in range(number_of_batches)]
 
     simulator, prior = prepare_for_sbi(simulator, prior)
-    inference = SNPE(prior)
 
     for tmp_path in dir_paths:
         os.makedirs(tmp_path, exist_ok=False)
@@ -49,9 +51,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-o", "--output_dir", required=True,
                         help="Path to output directory of simulations")
-    parser.add_argument("-b", "--number_of_batches", required=True)
-    parser.add_argument("-s", "--simulations_per_batch", required=True)                        
-    args = vars(parser)
+    parser.add_argument("-b", "--number_of_batches", required=True, type=int)
+    parser.add_argument("-s", "--simulations_per_batch", required=True, type=int)                        
+    args = vars(parser.parse_args())
     main(output_dir=args['output_dir'], number_of_batches=args['number_of_batches'], 
          simulations_per_batch=args['simulations_per_batch'])
 
