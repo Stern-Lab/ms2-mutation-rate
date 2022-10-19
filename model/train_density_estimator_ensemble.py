@@ -1,6 +1,5 @@
 # this script will train an individual model for each training batch
 
-
 import argparse
 import torch.nn as nn 
 from sbi.inference import SNPE
@@ -8,8 +7,9 @@ from sbi import utils as sbiutils
 import torch
 import os
 import dill
-import numpy as np
 import json
+import sys
+sys.path.append('..')
 from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat
 
 
@@ -20,7 +20,6 @@ def append_simulations_from_dir(batch_path, inference, sumstat):
     theta = torch.Tensor(torch.load(os.path.join(batch_path, 'theta.pt')))
     inference = inference.append_simulations(theta, x)
     return inference
-
 
 def train_model(inference, output_path, max_epochs=600):
     density_estimator = inference.train(max_num_epochs=max_epochs)
