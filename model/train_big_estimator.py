@@ -8,7 +8,7 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat
+from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat, assign_embedding_net
 
 
 def train_model(inference, output_path, max_epochs=5000):
@@ -27,25 +27,6 @@ def append_sims_from_batches_dir(xs, thetas, batches_dir):
         thetas.append(torch.load(os.path.join(batch_path, 'theta.pt')))
     return xs, thetas
 
-def assign_embedding_net(sumstat):
-    if sumstat=='long':
-        embed=True
-        embedding_net = nn.Sequential(nn.Linear(204, 128), 
-                        nn.ReLU(),
-                        nn.Linear(128, 32),
-                        nn.ReLU(),
-                        nn.Linear(32, 16))
-    elif sumstat=='man':
-        embed=True
-        embedding_net = nn.Sequential(nn.Linear(3009, 512), 
-                        nn.ReLU(),
-                        nn.Linear(512, 128),
-                        nn.ReLU(),
-                        nn.Linear(128, 16))
-    elif sumstat=='short':
-        embed=False
-        embedding_net = None
-    return embed, embedding_net
 
 def main(training_path, summary_statistic, output_path):
     verify_sumstat(summary_statistic)

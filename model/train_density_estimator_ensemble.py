@@ -10,7 +10,7 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat
+from utils import assign_embedding_net, get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat
 
 
 def append_simulations_from_dir(batch_path, inference, sumstat):
@@ -28,26 +28,10 @@ def train_model(inference, output_path, max_epochs=600):
         dill.dump(posterior, handle)
     return posterior
 
-def main(training_set_path, output_path, summary_statistic):
+def main(training_set_path, summary_statistic, output_path):
 
-    if summary_statistic=='long':
-        embed=True
-        embedding_net = nn.Sequential(nn.Linear(204, 128), 
-                        nn.ReLU(),
-                        nn.Linear(128, 32),
-                        nn.ReLU(),
-                        nn.Linear(32, 16))
-    elif summary_statistic=='man':
-        embed=True
-        embedding_net = nn.Sequential(nn.Linear(3009, 512), 
-                        nn.ReLU(),
-                        nn.Linear(512, 128),
-                        nn.ReLU(),
-                        nn.Linear(128, 16))
-    elif summary_statistic=='short':
-        embed=False
-    else:
-        raise Exception(f'summary_statistic should be one of [short, long, man] not {summary_statistic} !')
+    verify_sumstat(summary_statistic)
+    embed, embedding_net = assign_embedding_net(summary_statistic)
 
     inference_dir = os.path.join(output_path, summary_statistic)
 

@@ -4,12 +4,9 @@ from sbi import analysis as sbianalysis
 from sbi import utils as sbiutils
 import pandas as pd
 import os
-from matplotlib import pyplot as plt
-import seaborn as sns
-import time
 import torch
+import torch.nn as nn 
 import arviz as az
-import warnings
 import numpy as np
 import pandas as pd
 
@@ -197,3 +194,23 @@ def simulate_from_post(post, num_of_samples, syn_prob):
 def verify_sumstat(sumstat):
     if sumstat!='long' and sumstat!='short' and sumstat!='man':
         raise Exception(f'sumstat should be one of [short, long, man] not {sumstat}!')
+
+def assign_embedding_net(sumstat):
+    if sumstat=='long':
+        embed=True
+        embedding_net = nn.Sequential(nn.Linear(204, 128), 
+                        nn.ReLU(),
+                        nn.Linear(128, 32),
+                        nn.ReLU(),
+                        nn.Linear(32, 16))
+    elif sumstat=='man':
+        embed=True
+        embedding_net = nn.Sequential(nn.Linear(3009, 512), 
+                        nn.ReLU(),
+                        nn.Linear(512, 128),
+                        nn.ReLU(),
+                        nn.Linear(128, 16))
+    elif sumstat=='short':
+        embed=False
+        embedding_net = None
+    return embed, embedding_net
