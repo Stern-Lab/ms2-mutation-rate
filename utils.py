@@ -194,33 +194,6 @@ def simulate_from_post(post, num_of_samples, syn_prob):
     return syn_data, params_list
 
 
-# depricated!
-'''
-def short_sumstat_from_model_output(data):
-    passages = list(range(data.shape[1]-10))
-    data_hist = data.groupby('reg_mut_num')[passages].sum()
-    sum_stat = pd.Series({f'reg_{col}': sum(data_hist.index * data_hist[col]) for col in data_hist.columns})
-    data_hist = data.groupby('syn_mut_num')[passages].sum()
-    sum_stat = sum_stat.append(pd.Series({f'syn_{col}': sum(data_hist.index * data_hist[col]) for col in data_hist.columns}))
-    return sum_stat
-
-def new_med_sumstat_to_dict(sumstat):
-    # depricated
-    avgs = sumstat[-6:] 
-    avgs_dict = {'non-syn': [avgs[x] for x in range(len(avgs)) if x%2==1], 
-                 'syn': [avgs[x] for x in range(len(avgs)) if x%2==0]}
-    freqs = sumstat[:-6].reshape(3,28)
-    freqs_dict = dict()
-    max_muts = 6
-    non_syn_muts_position = [0,7,13,18,22,25,27]
-    for passage_num in range(3):
-        passage = dict()
-        for non_syn_mut in range(0,max_muts+1):
-            for syn_mut in range(0,max_muts+1):
-                if syn_mut+non_syn_mut > max_muts:
-                    continue
-                passage[(syn_mut, non_syn_mut)] = freqs[passage_num][non_syn_muts_position[non_syn_mut]+syn_mut]
-        real_passage_num = {0:3, 1:7, 2:10}
-        freqs_dict[real_passage_num[passage_num]] = passage
-    return avgs_dict, freqs_dict
-'''
+def verify_sumstat(sumstat):
+    if sumstat!='long' and sumstat!='short' and sumstat!='man':
+        raise Exception(f'sumstat should be one of [short, long, man] not {sumstat}!')
