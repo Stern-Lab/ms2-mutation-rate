@@ -1,0 +1,94 @@
+import argparse
+from sbi.inference import SNPE
+from sbi import utils as sbiutils
+import torch
+import torch.nn as nn 
+import os
+import dill
+import json
+import sys
+sys.path.append('..')
+from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat
+
+
+def train_model(inference, output_path, max_epochs=5000):
+    density_estimator = inference.train(max_num_epochs=max_epochs)
+    posterior = inference.build_posterior(density_estimator)
+    with open(output_path, "wb") as handle:
+        dill.dump(posterior, handle)
+    return posterior
+
+def append_sims_from_batches_dir(xs, thetas, batches_dir):
+    for batch_name in os.listdir(batches_dir):
+        if batch_name == 'params.txt':
+            continue
+        batch_path = os.path.join(batches_dir, batch_name)
+        xs.append(torch.load(os.path.join(batch_path, 'x.pt'))) 
+        thetas.append(torch.load(os.path.join(batch_path, 'theta.pt')))
+    return xs, thetas
+
+def assign_embedding_net(sumstat):
+    if sumstat=='long':
+        embed=True
+        embedding_net = nn.Sequential(nn.Linear(204, 128), 
+                        nn.ReLU(),
+                        nn.Linear(128, 32),
+                        nn.ReLU(),
+                        nn.Linear(32, 16))
+    elif sumstat=='man':
+        embed=True
+        embedding_net = nn.Sequential(nn.Linear(3009, 512), 
+                        nn.ReLU(),
+                        nn.Linear(512, 128),
+                        nn.ReLU(),
+                        nn.Linear(128, 16))
+    elif sumstat=='short':
+        embed=False
+        embedding_net = None
+    return embed, embedding_net
+
+def main(training_path, summary_statistic, output_path):
+    verify_sumstat(summary_statistic)
+    sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
+    embed, embedding_net = assign_embedding_net(summary_statistic)
+    
+    os.makedirs(output_path, exist_ok=False)
+    
+    with open(os.path.join(training_path,'params.txt'), 'r') as infile:
+        params = json.load(infile)
+    params['sims_per_model'] = 'all'
+    params['batches_dir'] = training_path
+    if embed:
+        params['nn'] = str([x for x in embedding_net.modules() if not isinstance(x, nn.Sequential)])
+    with open(os.path.join(output_path,'params.txt'), 'w') as outfile:
+        json.dump(params, outfile)
+        
+    prior = get_prior_from_params(params, readable=False)
+
+    estimator_path = os.path.join(output_path,'big_estimator.dill')
+    xs = []
+    thetas = []
+    xs, thetas = append_sims_from_batches_dir(xs, thetas, training_path)
+    x = torch.cat(xs)
+    x = sumstat_funcs_dict[summary_statistic](x)
+    theta = torch.cat(thetas)
+    density_estimator = 'maf'
+    if embed:
+        density_estimator = sbiutils.posterior_nn(model='maf', embedding_net=embedding_net)
+    inference = SNPE(prior=prior, density_estimator=density_estimator)
+    inference = inference.append_simulations(theta, x)
+    train_model(inference, estimator_path)
+
+
+    if __name__ == "__main__":
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-i", "--training_path", required=True, 
+                            help='path to simulations containing subdirs train and test')
+        parser.add_argument("-o", "--output_path", required=True,
+                            help="Path to output directory of simulations")
+        parser.add_argument("-s", "--summary_statistic", required=True,
+                            help='summary statistic for the model')
+                                
+        args = vars(parser.parse_args())
+        main(output_path=args['output_path'], training_path=args['training_path'], 
+            sumstat=args['summary_statistic'])
