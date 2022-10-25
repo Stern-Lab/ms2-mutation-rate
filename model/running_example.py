@@ -68,7 +68,6 @@ def test(estimators_path, simulations_path, test_results_path,
 def main(output_path, train_ensemble_size=8, train_simulations_per_ensemble=10000,
          test_size=2000, seq_error_rate=0.00005, samples_per_estimator=1000, 
          rej_abc_acceptance_rate=0.01):
-     print(rej_abc_acceptance_rate) 
      warn("with default values this should take several days to run on dozens of CPU cores...")
      simulations_path = join(output_path, 'simulations')
      print('simulating train and test...')
