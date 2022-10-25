@@ -66,7 +66,7 @@ def calc_stats(post, theta, readable_prior, bins=100):
     cols = [x for x in post.columns if x!='model']
     for i, col in enumerate(cols):
         this_post = post[col]
-        this_prior = np.array(readable_prior[col])
+        this_prior = np.array(readable_prior[col], dtype=float)
         mode, hdi50 = get_mode_and_hdi(this_post, hdi_percent=0.50, bins=bins)
         mode, hdi95 = get_mode_and_hdi(this_post, hdi_percent=0.95, bins=bins)
         if col=='mu':
@@ -86,7 +86,7 @@ def calc_stats(post, theta, readable_prior, bins=100):
     return stats
 
 def get_predictions(density_estimator, sum_stat, theta, readable_prior, num_of_samples=1000, bins=100):
-    print(f'Getting posterior from sumstat:\n{sum_stat}')
+    #print(f'Getting posterior from sumstat:\n{sum_stat}')
     model = sbi_post(density_estimator)
     model.generate_post(sum_stat, num_of_samples)
     post = model.get_post()

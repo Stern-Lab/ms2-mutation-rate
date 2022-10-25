@@ -16,8 +16,8 @@ def get_sims_from_path(path):
     for batch in os.listdir(path):
         if 'params' in batch:
             continue
-        x = torch.load(f'{path}/{batch}/x.pt')
-        theta = torch.load(f'{path}/{batch}/theta.pt')
+        x = torch.load(os.path.join(path, batch, 'x.pt'))
+        theta = torch.load(os.path.join(path, batch, 'theta.pt'))
         thetas.append(theta)
         xs.append(x)
     xs = torch.cat(xs)
@@ -42,21 +42,20 @@ def test_rej_sampling(x_train, x_test, t_train, t_test, prior, acceptance_rate=0
         best_rmses_indices = np.argsort(rmse)[:accepted_sims]
         rmse_post = theta_df.loc[best_rmses_indices]
         rmse_stats = calc_stats(rmse_post, theta, prior)
-        rmse_stats['theta'] = '_'.join(str(x) for x in theta)
+        rmse_stats['theta'] = '_'.join(str(float(t)) for t in theta)
         data.append(rmse_stats)
     print(time.time()-start)
     grid = pd.concat(data).reset_index(drop=True)
     return grid
 
-def main(sims_path, sumstat, output_path, acceptance_rate=0.01):
+def main(training_sims_path, test_sims_path, sumstat, output_path, acceptance_rate=0.01):
     verify_sumstat(sumstat)
     sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
-    train_path = os.path.join(sims_path, 'train')
-    x_train, t_train = get_sims_from_path(train_path)
+    x_train, t_train = get_sims_from_path(training_sims_path)
     x_train = sumstat_funcs_dict[sumstat](x_train)
-    x_test, t_test = get_sims_from_path(os.path.join(sims_path, 'test'))
+    x_test, t_test = get_sims_from_path(test_sims_path)
     x_test = sumstat_funcs_dict[sumstat](x_test)
-    with open(os.path.join(train_path,'params.txt'), 'r') as infile:
+    with open(os.path.join(training_sims_path,'params.txt'), 'r') as infile:
         params = json.load(infile)
     prior = get_prior_from_params(params, readable=True)
     rej_test = test_rej_sampling(x_train, x_test, t_train, t_test, prior, acceptance_rate=acceptance_rate)
@@ -64,13 +63,15 @@ def main(sims_path, sumstat, output_path, acceptance_rate=0.01):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--simulations_path", required=True, 
-                        help='path to simulations containing subdirs train and test')
+    parser.add_argument("-tr", "--training_sims_path", required=True, 
+                        help='path to training simulations')
+    parser.add_argument("-te", "--test_sims_path", required=True, 
+                        help='path to test simulations')
     parser.add_argument("-o", "--output_path", required=True,
                         help="Path to output directory of simulations")
     parser.add_argument("-s", "--summary_statistic", required=True,
                         help='summary statistic for the model')
-    parser.add_argument("-s", "--acceptance_rate", required=True, type=float,
+    parser.add_argument("-a", "--acceptance_rate", required=True, type=float,
                         help='REJ-ABC accepetance rate - the posterior will be created\
                               from this fraction of simulations')
                             

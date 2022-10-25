@@ -11,7 +11,7 @@ from utils import get_ensemble_predictions, get_prior_from_params, grab_short_su
 
 DEFAULT_SAMPLES_PER_ESTIMATOR = 1000
 
-def main(density_estimators_path, test_set_path, output_dir, samples_per_estimator=DEFAULT_SAMPLES_PER_ESTIMATOR):
+def main(density_estimators_path, test_set_path, output_path, samples_per_estimator=DEFAULT_SAMPLES_PER_ESTIMATOR):
     
     sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
     summary_statistic = os.path.basename(os.path.normpath(density_estimators_path))
@@ -42,7 +42,7 @@ def main(density_estimators_path, test_set_path, output_dir, samples_per_estimat
         stats['theta'] = '_'.join(str(float(t)) for t in theta)
         data.append(stats)
     grid = pd.concat(data).reset_index(drop=True)
-    grid.to_csv(os.path.join(output_dir, 'ensemble_test.csv'))
+    grid.to_csv(output_path)
 
 
 if __name__ == "__main__":
@@ -50,12 +50,12 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--density_estimators_path", required=True,
                         help="Path to density estimators with a specific summary statistic")
     parser.add_argument("-t", "--test_set_path", required=True)
-    parser.add_argument("-o", "--output_dir", required=True) 
+    parser.add_argument("-o", "--output_path", required=True) 
     parser.add_argument("-s", "--samples_per_estimator", required=False, type=int,
                         help='number of samples to draw from each estimator', default=DEFAULT_SAMPLES_PER_ESTIMATOR)                        
     args = vars(parser.parse_args())
     main(density_estimators_path=args['density_estimators_path'], test_set_path=args['test_set_path'], 
-         output_dir=args['output_dir'], samples_per_estimator=args['samples_per_estimator'])
+         output_path=args['output_path'], samples_per_estimator=args['samples_per_estimator'])
 
 
 

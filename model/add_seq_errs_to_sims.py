@@ -1,4 +1,5 @@
 import argparse
+import json
 import numpy as np
 import torch
 import shutil
@@ -32,10 +33,7 @@ def simulate_sequence_sampling(passages, sample_sizes, seq_error_rate, syn_prob,
 
 def main(input_simulations_path, output_simulations_path, seq_error_rate=0.00005):
     
-    if os.path.exists(output_simulations_path):
-        raise Exception(f'{output_simulations_path} exists! please choose a new output dir.')
-    
-    default_sample_size = 2000
+    DEFAULT_SAMPLE_SIZE = 2000
     
     batches = [x for x in os.listdir(input_simulations_path) if 'batch' in x]
     for batch in batches:
@@ -56,18 +54,21 @@ def main(input_simulations_path, output_simulations_path, seq_error_rate=0.00005
                 p_ada_syn = theta[4]
                 p_ada_non_syn = theta[5]
                 passages = df[[3,7,10]].to_dict()
-                print(i)
                 seq_passages = simulate_sequence_sampling(passages, sample_sizes, seq_error_rate, syn_prob, p_ada_syn, 
-                p_ada_non_syn, default_sample_size)
+                p_ada_non_syn, DEFAULT_SAMPLE_SIZE)
                 res.append(np.array(get_total_sumstat(wrangle_data(seq_passages))))
             new_xs = torch.Tensor(res)
-            new_path = os.path.join(output_simulations_path,f'replica_{replica}_err_rate_{seq_error_rate}')
+            new_path = os.path.join(output_simulations_path,replica)
             new_batch_path = os.path.join(new_path, batch)
             os.makedirs(new_batch_path)
             torch.save(new_xs, os.path.join(new_batch_path,'x.pt'))
             torch.save(thetas, os.path.join(new_batch_path,'theta.pt'))
             if batch=='batch_0':
-                shutil.copy(os.path.join(input_simulations_path,'params.txt'), os.path.join(new_path,'params.txt'))
+                with open(os.path.join(input_simulations_path,'params.txt'), 'r') as infile:
+                    params = json.load(infile)
+                params['sequence_errors'] = seq_error_rate
+                with open(os.path.join(new_path,'params.txt'), 'w') as outfile:
+                    json.dump(params, outfile)
 
 
 if __name__ == "__main__":
