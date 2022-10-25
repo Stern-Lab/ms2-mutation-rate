@@ -1,4 +1,6 @@
 
+# These are all helper functions for the simulator which does little besides importing and using them
+
 import numpy as np
 import pandas as pd
 from collections import defaultdict
