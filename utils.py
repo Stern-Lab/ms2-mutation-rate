@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 
 
+#TODO: cleanups!
+
 prior_names = ['reg_del_prob', 'reg_ada_prob', 'syn_del_prob', 'syn_ada_prob', 'ada_val', 'del_val', 'mu', 
                'p0_syn', 'p0_non_syn']
 prior_names = ['mu', 'w_syn', 'w_ratio', 'w_ada', 'p_ada_syn', 'p_ada_non_syn', 'p0_syn', 'p0_non_syn', 'w_penalty', 'epistasis_boost']
@@ -176,7 +178,7 @@ def manual_to_long_sumstat(man_sumstat):
     return man_sumstat.reshape(-1,3)[:long_sumstat_length_per_passage,:].flatten()
 
 def simulate_from_post(post, num_of_samples, syn_prob):
-    from cheating_MACHA import simulate  # our latest simulator
+    from simulator import simulate  # our latest simulator
     params_list = []
     syn_data = []
     i = 1
