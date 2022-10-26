@@ -1,4 +1,4 @@
-# WARNING: This file is made mostly for reference and understanding the inference pipeline.
+# WARNING: This file is made mostly for reference and understanding the pipeline.
 #          Actually running it would require many GB of RAM and would take several days WITH dozens of CPU cores! 
 #          You can get all outputs of this script on Zenodo as described in the README
 
@@ -6,12 +6,12 @@ import argparse
 import os
 from os.path import join
 from warnings import warn
-from sbi_simulate import main as simulate
-from add_seq_errs_to_sims import main as add_seq_errs
-from train_density_estimator_ensemble import main as train_ensemble
-from train_big_estimator import main as train_big_estimator
-from test_ensemble import main as test_estimator
-from test_REJ_ABC import main as test_REJ_ABC
+from model.sbi_simulate import main as simulate
+from model.add_seq_errs_to_sims import main as add_seq_errs
+from model.train_density_estimator_ensemble import main as train_ensemble
+from model.train_big_estimator import main as train_big_estimator
+from model.test_ensemble import main as test_estimator
+from model.test_REJ_ABC import main as test_REJ_ABC
 
 def simulate_and_add_seq_errs(simulations_path, ensemble_size, simulations_per_batch, 
                               seq_error_rate):
