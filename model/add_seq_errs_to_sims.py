@@ -2,7 +2,6 @@ import argparse
 import json
 import numpy as np
 import torch
-import shutil
 import os
 from params import syn_prob_coding_only as syn_prob
 from evolutionary_model import wrangle_data, get_mutations, simulate_next_passage, normalize_freqs_dict
