@@ -5,7 +5,10 @@
 import argparse
 import os
 from os.path import join
+import shutil
 from warnings import warn
+import sys
+sys.path.append(join(os.path.dirname(__file__),'model'))
 from model.sbi_simulate import main as simulate
 from model.add_seq_errs_to_sims import main as add_seq_errs
 from model.train_density_estimator_ensemble import main as train_ensemble
@@ -14,28 +17,28 @@ from model.test_ensemble import main as test_estimator
 from model.test_REJ_ABC import main as test_REJ_ABC
 
 def simulate_and_add_seq_errs(simulations_path, ensemble_size, simulations_per_batch, 
-                              seq_error_rate):
+                              seq_error_rate, unit_test):
      # simulates and adds sequencing errors to the simulations
      # simulations without errors are kept for testing models with higher/lower errors
      training_simulations_no_errs_path = join(simulations_path, 'sims_before_errs')
-     simulate(training_simulations_no_errs_path, ensemble_size, simulations_per_batch)
+     simulate(training_simulations_no_errs_path, ensemble_size, simulations_per_batch, unit_test)
      add_seq_errs(training_simulations_no_errs_path, simulations_path, seq_error_rate)          
 
 def simulate_train_and_test(simulations_path, train_ensemble_size, train_simulations_per_batch,
-                            test_size, seq_error_rate):
+                            test_size, seq_error_rate, unit_test):
      train_path = join(simulations_path, 'train')
      simulate_and_add_seq_errs(train_path, train_ensemble_size, train_simulations_per_batch, 
-                              seq_error_rate)
+                              seq_error_rate, unit_test)
      test_path = join(simulations_path, 'test')
      TEST_ENSEMBLE_SIZE = 1  # test set doesn't need an ensemble.
-     simulate_and_add_seq_errs(test_path, TEST_ENSEMBLE_SIZE, test_size, seq_error_rate)
+     simulate_and_add_seq_errs(test_path, TEST_ENSEMBLE_SIZE, test_size, seq_error_rate, unit_test)
 
 def train(training_simulations_path, estimators_path):
      # trains both the big estimator and the ensemble estimators
      ensemble_estimators_path = join(estimators_path, 'ensembles')
      big_estimators_path = join(estimators_path, 'big')
      for replica in ['A', 'B', 'C']:
-          for summmary_statistic in ['long', 'short', 'man']:
+          for summmary_statistic in ['SR', 'LR', 'L-LR']:
                training_set_path = join(training_simulations_path,
                                                 replica)
                trained_ensemble_path = join(ensemble_estimators_path, replica, 
@@ -49,7 +52,7 @@ def test(estimators_path, simulations_path, test_results_path,
          samples_per_estimator, rej_abc_acceptance_rate):
      # test ensemble density estimators, big density estimators and REJ-ABC
      for replica in ['A', 'B', 'C']:
-          for summmary_statistic in ['long', 'short', 'man']:
+          for summmary_statistic in ['SR', 'LR', 'L-LR']:
                for model_type in ['big', 'ensembles']:
                     estimator_path = join(estimators_path, model_type)
                     trained_ensemble_path = join(estimator_path, replica, 
@@ -67,12 +70,15 @@ def test(estimators_path, simulations_path, test_results_path,
 
 def main(output_path, train_ensemble_size=8, train_simulations_per_ensemble=10000,
          test_size=2000, seq_error_rate=0.00005, samples_per_estimator=1000, 
-         rej_abc_acceptance_rate=0.01):
-     warn("with default values this should take several days to run on dozens of CPU cores...")
+         rej_abc_acceptance_rate=0.01, unit_test=False):
+     if not unit_test:
+          warn("with default values this should take several days to run on dozens of CPU cores...")
+     else:
+          print('UNITEST: Running pipeline tests. this should take a few minutes and might max out your CPU cores...')
      simulations_path = join(output_path, 'simulations')
      print('simulating train and test...')
      simulate_train_and_test(simulations_path, train_ensemble_size, train_simulations_per_ensemble, 
-                             test_size, seq_error_rate)
+                             test_size, seq_error_rate, unit_test)
      training_simulations = join(simulations_path, 'train')
      estimators_path = join(output_path, 'estimators')
      print('training estimators...')
@@ -82,6 +88,10 @@ def main(output_path, train_ensemble_size=8, train_simulations_per_ensemble=1000
      print('\ntesting estimators...')
      test(estimators_path, simulations_path, test_results_path,
           samples_per_estimator, rej_abc_acceptance_rate)
+     if unit_test:
+          print('UNITEST: Removing all the files created by the pipeline...')
+          shutil.rmtree(output_path)
+          print('UNITEST: Hurrah! Looks like everything works!')
                
 if __name__ == "__main__":
      parser = argparse.ArgumentParser()
@@ -102,12 +112,18 @@ if __name__ == "__main__":
                                for creating the posterior')
      parser.add_argument("-r", "--rej_abc_acceptance_rate", type=float, default=0.01,
                          help='REJ-ABC posterior will be created from this fraction of simulations')
-                              
+     parser.add_argument("-u", "--unit_test_run", default='N', 
+                         help="run a unit test with preconfigured parameters and ignore other parameters")
      args = vars(parser.parse_args())
-     main(output_path=args['output_path'], train_ensemble_size=args['train_ensemble_size'], 
-          train_simulations_per_ensemble=args['train_simulations_per_ensemble'], 
-          test_size=args['test_size'], seq_error_rate=args['seq_error_rate'], 
-          samples_per_estimator=args['samples_per_estimator'], 
-          rej_abc_acceptance_rate=args['rej_abc_acceptance_rate'])
+     if (args['unit_test_run']=='Y') or (args['unit_test_run']=='y'):
+          main(output_path=args['output_path'], train_ensemble_size=2, 
+          train_simulations_per_ensemble=51, test_size=2, seq_error_rate=0.00005, 
+          samples_per_estimator=5, rej_abc_acceptance_rate=0.01, unit_test=True)
+     else:
+          main(output_path=args['output_path'], train_ensemble_size=args['train_ensemble_size'], 
+               train_simulations_per_ensemble=args['train_simulations_per_ensemble'], 
+               test_size=args['test_size'], seq_error_rate=args['seq_error_rate'], 
+               samples_per_estimator=args['samples_per_estimator'], 
+               rej_abc_acceptance_rate=args['rej_abc_acceptance_rate'])
 
 
