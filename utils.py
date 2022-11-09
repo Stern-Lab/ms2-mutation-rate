@@ -194,25 +194,30 @@ def simulate_from_post(post, num_of_samples, syn_prob):
 
 
 def verify_sumstat(sumstat):
-    if sumstat!='long' and sumstat!='short' and sumstat!='man':
-        raise Exception(f'sumstat should be one of [short, long, man] not {sumstat}!')
+    if sumstat!='LR' and sumstat!='SR' and sumstat!='L-LR':
+        raise Exception(f'sumstat should be one of [SR, LR, L-LR] not {sumstat}!')
 
 def assign_embedding_net(sumstat):
-    if sumstat=='long':
+    if sumstat=='LR':
         embed=True
         embedding_net = nn.Sequential(nn.Linear(204, 128), 
                         nn.ReLU(),
                         nn.Linear(128, 32),
                         nn.ReLU(),
                         nn.Linear(32, 16))
-    elif sumstat=='man':
+    elif sumstat=='L-LR':
         embed=True
         embedding_net = nn.Sequential(nn.Linear(3009, 512), 
                         nn.ReLU(),
                         nn.Linear(512, 128),
                         nn.ReLU(),
                         nn.Linear(128, 16))
-    elif sumstat=='short':
+    elif sumstat=='SR':
         embed=False
         embedding_net = None
+    else:
+        raise Exception(f'sumstat should be one of [SR, LR, L-LR] not {sumstat}!')
     return embed, embedding_net
+
+sumstat_funcs_dict = {'SR': grab_short_sumstat, 'LR': grab_long_sumstat, 
+                      'L-LR': grab_man_sumstat}

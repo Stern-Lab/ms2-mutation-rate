@@ -10,11 +10,10 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import assign_embedding_net, get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat
+from utils import assign_embedding_net, get_prior_from_params, sumstat_funcs_dict, verify_sumstat
 
 
 def append_simulations_from_dir(batch_path, inference, sumstat):
-    sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
     x = torch.Tensor(torch.load(os.path.join(batch_path, 'x.pt')))
     x = sumstat_funcs_dict[sumstat](x)
     theta = torch.Tensor(torch.load(os.path.join(batch_path, 'theta.pt')))

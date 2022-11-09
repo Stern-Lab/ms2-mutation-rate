@@ -6,14 +6,12 @@ import numpy as np
 import pandas as pd
 import sys
 sys.path.append('..')
-from utils import get_ensemble_predictions, get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat
+from utils import get_ensemble_predictions, get_prior_from_params, sumstat_funcs_dict
 
 
 DEFAULT_SAMPLES_PER_ESTIMATOR = 1000
 
 def main(density_estimators_path, test_set_path, output_path, samples_per_estimator=DEFAULT_SAMPLES_PER_ESTIMATOR):
-    
-    sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
     summary_statistic = os.path.basename(os.path.normpath(density_estimators_path))
     with open(os.path.join(density_estimators_path,'params.txt'), 'r') as infile:
         params = json.load(infile)

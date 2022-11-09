@@ -8,7 +8,7 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, verify_sumstat, assign_embedding_net
+from utils import get_prior_from_params, sumstat_funcs_dict, verify_sumstat, assign_embedding_net
 
 
 def train_model(inference, output_path, max_epochs=5000):
@@ -30,7 +30,6 @@ def append_sims_from_batches_dir(xs, thetas, batches_dir):
 
 def main(training_path, summary_statistic, output_path):
     verify_sumstat(summary_statistic)
-    sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
     embed, embedding_net = assign_embedding_net(summary_statistic)
     
     os.makedirs(output_path, exist_ok=False)

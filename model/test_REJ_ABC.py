@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import sys
 sys.path.append('..')
-from utils import get_prior_from_params, grab_short_sumstat, grab_long_sumstat, grab_man_sumstat, calc_stats, verify_sumstat
+from utils import get_prior_from_params, sumstat_funcs_dict, calc_stats, verify_sumstat
 import time
 
 
@@ -44,13 +44,11 @@ def test_rej_sampling(x_train, x_test, t_train, t_test, prior, acceptance_rate=0
         rmse_stats = calc_stats(rmse_post, theta, prior)
         rmse_stats['theta'] = '_'.join(str(float(t)) for t in theta)
         data.append(rmse_stats)
-    print(time.time()-start)
     grid = pd.concat(data).reset_index(drop=True)
     return grid
 
 def main(training_sims_path, test_sims_path, sumstat, output_path, acceptance_rate=0.01):
     verify_sumstat(sumstat)
-    sumstat_funcs_dict = {'short': grab_short_sumstat, 'long': grab_long_sumstat, 'man': grab_man_sumstat}
     x_train, t_train = get_sims_from_path(training_sims_path)
     x_train = sumstat_funcs_dict[sumstat](x_train)
     x_test, t_test = get_sims_from_path(test_sims_path)
