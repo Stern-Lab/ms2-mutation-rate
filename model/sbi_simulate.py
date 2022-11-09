@@ -10,23 +10,23 @@ import json
 import numpy as np
 import multiprocessing as mp
 from functools import partial
-from params import passages, pop_size
-import sys
 from simulator import simulate
-from params import readable_prior
+import sys
+from params import passages, pop_size, readable_prior
 from params import syn_prob_coding_only as syn_prob
 sys.setrecursionlimit(100000)  # appearently necessary for dill when doing many batches
 
 
-def main(output_dir, ensemble_size=7, simulations_per_batch=1000):
+def main(output_dir, ensemble_size=7, simulations_per_batch=1000, unitest_run=False):
     # num of simulations = number_of_batches * syms_per_batch 
     os.makedirs(output_dir, exist_ok=True)
+    if unitest_run:
+        readable_prior['mu'] = (-4,-3)  # makes everything run fast enough for unitesting!
     params = readable_prior.copy()
     params['syn_prob'] = syn_prob
     params['passages'] = passages
     params['pop_size'] = pop_size
     params['simulations_per_batch'] = simulations_per_batch
-
     with open(f'{output_dir}/params.txt', 'w') as outfile:
         json.dump(params, outfile)
 
