@@ -221,3 +221,11 @@ def assign_embedding_net(sumstat):
 
 sumstat_funcs_dict = {'SR': grab_short_sumstat, 'LR': grab_long_sumstat, 
                       'L-LR': grab_man_sumstat}
+
+def train_model(inference, output_path, max_epochs=600):
+    density_estimator = inference.train(max_num_epochs=max_epochs)
+    posterior = inference.build_posterior(density_estimator)
+    print('')
+    with open(output_path, "wb") as handle:
+        dill.dump(posterior, handle)
+    return posterior

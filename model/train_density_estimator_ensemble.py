@@ -10,7 +10,7 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import assign_embedding_net, get_prior_from_params, sumstat_funcs_dict, verify_sumstat
+from utils import assign_embedding_net, get_prior_from_params, sumstat_funcs_dict, verify_sumstat, train_model
 
 
 def append_simulations_from_dir(batch_path, inference, sumstat):
@@ -19,14 +19,6 @@ def append_simulations_from_dir(batch_path, inference, sumstat):
     theta = torch.Tensor(torch.load(os.path.join(batch_path, 'theta.pt')))
     inference = inference.append_simulations(theta, x)
     return inference
-
-def train_model(inference, output_path, max_epochs=600):
-    density_estimator = inference.train(max_num_epochs=max_epochs)
-    posterior = inference.build_posterior(density_estimator)
-    print('')
-    with open(output_path, "wb") as handle:
-        dill.dump(posterior, handle)
-    return posterior
 
 def main(training_set_path, summary_statistic, output_dir):
 

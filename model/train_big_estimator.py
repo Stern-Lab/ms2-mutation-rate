@@ -8,15 +8,8 @@ import dill
 import json
 import sys
 sys.path.append('..')
-from utils import get_prior_from_params, sumstat_funcs_dict, verify_sumstat, assign_embedding_net
+from utils import get_prior_from_params, sumstat_funcs_dict, verify_sumstat, assign_embedding_net, train_model
 
-
-def train_model(inference, output_path, max_epochs=5000):
-    density_estimator = inference.train(max_num_epochs=max_epochs)
-    posterior = inference.build_posterior(density_estimator)
-    with open(output_path, "wb") as handle:
-        dill.dump(posterior, handle)
-    return posterior
 
 def append_sims_from_batches_dir(xs, thetas, batches_dir):
     for batch_name in os.listdir(batches_dir):
