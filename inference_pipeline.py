@@ -74,7 +74,8 @@ def main(output_path, train_ensemble_size=8, train_simulations_per_ensemble=1000
      if not unit_test:
           warn("with default values this should take several days to run on dozens of CPU cores...")
      else:
-          print('UNITEST: Running pipeline tests. this should take a few minutes and might max out your CPU cores...')
+          print('UNITEST: Running pipeline tests. this may max out your CPU cores...')
+          print("UNITEST: But shouldn't take more than a few minutes.")
      simulations_path = join(output_path, 'simulations')
      print('simulating train and test...')
      simulate_train_and_test(simulations_path, train_ensemble_size, train_simulations_per_ensemble, 
@@ -95,7 +96,7 @@ def main(output_path, train_ensemble_size=8, train_simulations_per_ensemble=1000
                
 if __name__ == "__main__":
      parser = argparse.ArgumentParser()
-     parser.add_argument("-o", "--output_path", required=True,
+     parser.add_argument("-o", "--output_path", 
                          help="Path to output everything")
      parser.add_argument("-te", "--train_ensemble_size", default=8, type=int,
                          help='number of estimators in the ensemble')
@@ -116,7 +117,7 @@ if __name__ == "__main__":
                          help="run a unit test with preconfigured parameters and ignore other parameters")
      args = vars(parser.parse_args())
      if (args['unit_test_run']=='Y') or (args['unit_test_run']=='y'):
-          main(output_path=args['output_path'], train_ensemble_size=2, 
+          main(output_path='inference_pipeline_unit_test_tmp', train_ensemble_size=2, 
           train_simulations_per_ensemble=51, test_size=2, seq_error_rate=0.00005, 
           samples_per_estimator=5, rej_abc_acceptance_rate=0.01, unit_test=True)
      else:
