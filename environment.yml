@@ -2,6 +2,7 @@ name: ms2-mu
 channels:
   - defaults
   - pytorch
+  - bioconda
 dependencies:
   - pytorch==1.9.1
   - numpy==1.20.3
