@@ -9,7 +9,7 @@ Some of the data necessary to fully run the analysis in this repo is hosted on [
 
 
 ## Installation
-Using conda: <br>
+This repo was only tested on linux and as blast is used, windows is not supported. <br>
   `conda env create -n ENV_NAME --file environment.yml && activate ENV_NAME` <br>
 then use pip to install sbi: <br> 
   `pip install sbi`
