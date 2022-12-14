@@ -10,7 +10,7 @@ Some of the data necessary to fully run the analysis in this repo is hosted on [
 
 ## Installation
 Using conda: <br>
-  `conda env create -n ENV_NAME --file evirnoment.yml && activate ENV_NAME` <br>
+  `conda env create -n ENV_NAME --file environment.yml && activate ENV_NAME` <br>
 then use pip to install sbi: <br> 
   `pip install sbi`
 ## 
