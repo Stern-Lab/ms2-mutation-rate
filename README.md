@@ -19,6 +19,6 @@ activate ENV_NAME
 ```
 then use pip to install [sbi](https://www.mackelab.org/sbi): 
 ```
-python -m pip install sbi
+python -m pip install sbi==0.17.0
 ```
 
