@@ -178,7 +178,7 @@ def manual_to_long_sumstat(man_sumstat):
     return man_sumstat.reshape(-1,3)[:long_sumstat_length_per_passage,:].flatten()
 
 def simulate_from_post(post, num_of_samples, syn_prob):
-    from simulator import simulate  # our latest simulator
+    from model.simulator import simulate  
     params_list = []
     syn_data = []
     i = 1

@@ -1,10 +1,10 @@
 from joblib.externals.loky import set_loky_pickler
 set_loky_pickler("dill")
 
-def simulate(params, syn_prob=0.278, passages=10, pop_size=10**9):       
+def simulate(params, syn_prob=0.278, passages=10, pop_size=10**9, return_data=False):       
     # dill requires imports to be made within the simulator function
     import numpy as np
-    from evolutionary_model import simulate_p0, get_mutations, simulate_next_passage, wrangle_data, get_total_sumstat
+    from .evolutionary_model import simulate_p0, get_mutations, simulate_next_passage, wrangle_data, get_total_sumstat
 
     try:
         mutation_rate = 10 ** params[0]
@@ -27,7 +27,8 @@ def simulate(params, syn_prob=0.278, passages=10, pop_size=10**9):
             passage[i+1] = simulate_next_passage(fitness_effects, passage[i], mutations, pop_size,
                                                  epistasis_boost)
         data = wrangle_data(passage)
+        if not return_data:
+            data = get_total_sumstat(data)
     except Exception as e:
         raise Exception(f"Exception: '{e}' occured with params: {params}")
-    
-    return get_total_sumstat(data)
+    return data
