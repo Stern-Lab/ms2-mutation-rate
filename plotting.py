@@ -1,7 +1,7 @@
 import arviz as az
 import matplotlib.pyplot as plt
 import seaborn as sns
-from model.evolutionary_model import simulate
+from model.simulator import simulate
 from utils import get_short_sumstat, manual_sumstat_to_dataframe, simulate_from_post
 
 
