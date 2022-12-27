@@ -13,4 +13,4 @@ sample_sizes_B = [1919, 2038, 889]
 sample_sizes_C = [1945, 1011, 2342]
 syn_prob_coding_only=0.278
 passages=10 
-pop_size=10**9
+pop_size=20000000
