@@ -5,7 +5,7 @@ At Tel-Aviv University at Nov 27th 2022 by Itamar Caspi Under the supervision of
 
 The original LoopSeq fastq files of the empirical data are hosted on [SRA](https://www.ncbi.nlm.nih.gov/sra/PRJNA902661). 
 
-Some of the data necessary to fully run the analysis in this repo is hosted on [Zenodo]( https://zenodo.org/record/7483916).
+Some of the data necessary to fully run the analysis in this repo is hosted on [Zenodo](https://zenodo.org/record/7486851).
 
 This repo was only tested on Linux. Since some operations use BLAST, Windows is not supported.
 
