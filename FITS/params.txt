@@ -1,0 +1,16 @@
+# Infer mutation rate
+verbose 3
+N 20000000
+sample_size 3000
+fitness_allele1 1
+fitness_allele0 1
+min_log_mutation_rate0_0 -7
+max_log_mutation_rate0_0 -2
+min_log_mutation_rate1_1 -7
+max_log_mutation_rate1_1 -2
+min_log_mutation_rate0_1 -7
+max_log_mutation_rate0_1 -2
+min_log_mutation_rate1_0 -7
+max_log_mutation_rate1_0 -2
+num_samples_from_prior 100000
+acceptance_rate 0.01
