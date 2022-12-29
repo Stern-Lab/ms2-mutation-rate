@@ -160,10 +160,12 @@ def syn_non_syn_freq_plot(data, ax, num_of_genomes=10, color=None):
     
 def compare_posts(posts, title_suffix='', colors=None, alpha=0.7):
     fig, axes = plt.subplots(4, 3, figsize=(18,15), constrained_layout=True)
-    ax_dict = {'Mutation\nRate': (1,1), 'Syn\nEffect': (1,2), 'Non-Syn\nEffect': (1,0), 
-               'P0 Syn': (0,0), 'P0\nNon-Syn': (0,2),  'Beneficial\nEffect': (3,0), 'P0 Penalty': (3,2), 
-               'Epistasis\nFitness\nBoost': (3,1), 
-               'Beneficial\nSyn\nProbability': (2,2), 'Beneficial\nNon-Syn\nProbability': (2,0)}
+    ax_dict = {r'Mutation rate (U)': (1,1), r'Syn fitness effect ($w_{s}$)': (1,2), 
+               r'Non-syn fitness effect ($w_{ns}$)': (1,0), 
+               r'Mean initial syn ($M_{s}$)': (0,0), r'Mean initial non-syn ($M_{ns}$)': (0,2),  
+               r'Beneficial fitness effect ($w_{b}$)': (3,0), r'Initial log-fitness correlation ($\delta$)': (3,2), 
+               r'Epistasis effect ($\eta$)': (3,1), r'Beneficial syn probability ($p_{bs}$)': (2,2), 
+               r'Beneficial non-syn probability ($p_{bns}$)': (2,0)}
     if not colors:
         colors = sns.color_palette(None)
     title = 'Marginal Posteriors'
