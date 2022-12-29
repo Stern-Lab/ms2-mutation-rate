@@ -1,1 +1,1 @@
-to get FITS output data you can either install [FITS](https://github.com/Stern-Lab/FITS) and run it using the python script or just download FITS_post from [Zenodo](https://zenodo.org/record/7486651). 
+to get FITS output data you can either install [FITS](https://github.com/Stern-Lab/FITS) and run it using the python script or just download the posteior from [Zenodo](https://zenodo.org/record/7486651/files/FITS_post.tar.gz?download=1). 
