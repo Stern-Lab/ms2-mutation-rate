@@ -26,12 +26,11 @@ Note that some of the notebooks require additional files which can be downloaded
 ## Repo overview
 
 This repo contains 3 notebooks for creating all the figures:
- - `empirical_data_analysis.ipynb` - Using the different inference methods to estimate posterior distributions from empirical data and create posterior predictive checks.
- - `data_analysis/data_analysis.ipynb` - Exploring the empirical data.
- - `synthetic_data_tests/synthetic_data_tests.ipynb` - Analyzing inference methods on synthetic data.
- - 
+ - [empirical_data_analysis.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/empirical_data_inference.ipynb) - Using the different inference methods to estimate posterior distributions from empirical data and create posterior predictive checks.
+ - [data_analysis/data_analysis.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/data_analysis/data_analysis.ipynb) - Exploring the empirical data.
+ - [synthetic_data_tests/synthetic_data_tests.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/synthetic_data_tests/synthetic_data_tests.ipynb) - Analyzing inference methods on synthetic data.
 
-To understand the method and the pipeline, read the `inference_pipeline.py` file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the `model` directory.
+To understand the method and the pipeline, read the [inference_pipeline.py](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/inference_pipeline.py) file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the [model](https://github.com/Stern-Lab/ms2-mutation-rate/tree/main/model) directory.
  
 ## License
 
