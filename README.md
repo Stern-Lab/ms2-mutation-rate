@@ -21,4 +21,14 @@ then use pip to install [sbi](https://www.mackelab.org/sbi):
 ```
 python -m pip install sbi==0.17.0
 ```
+Note that some of the notebooks require additional files which can be downloaded from [Zenodo](https://zenodo.org/record/7486851) using the direct links in the notebook or in the README.md files in their respective directories.
 
+## Overview
+#### Results
+This repo contains 3 notebooks which are the goto for understanding the results of the paper and create all the graphs and more (some graphs went under minor post hoc editing):
+ - `empirical_data_analysis.ipynb` - Using the different density estimators to estimate empirical data and create posterior predictive checks.
+ - `data_analysis/data_analysis.ipynb` - Running and understanding the empirical data regardless of all the fancy modelling.
+ - `synthetic_data_tests/synthetic_data_tests.ipynb` - Analyzing the inference results of the density estimators on synthetic data.
+####  Method
+To get a deeper understanding of the method and the entire simulations pipeline, the best approach would be to read the `inference_pipeline.py` file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the `model` directory.
+ 
