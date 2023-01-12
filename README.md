@@ -1,6 +1,6 @@
-# Inferring the mutation rate of an RNA bacteriophage from time-series haplotype data via neural density estimation
+# Mutation rate, selection, and epistasis inferred from RNA virus haplotypes via neural posterior estimation
 
-This is the github repository that accompanies the thesis submitted towards M.Sc. in Mathematical and Theoretical Biology
+Repository that accompanies the thesis submitted towards M.Sc. in Mathematical and Theoretical Biology
 At Tel-Aviv University at Nov 27th 2022 by Itamar Caspi Under the supervision of Adi Stern and in collaboration with Yoav Ram.
 
 The original LoopSeq fastq files of the empirical data are hosted on [SRA](https://www.ncbi.nlm.nih.gov/sra/PRJNA902661). 
