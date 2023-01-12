@@ -1,11 +1,11 @@
-# Inferring the mutation rate of an RNA bacteriophage from time-series haplotype data via neural density estimation
+# Mutation rate, selection, and epistasis inferred from RNA virus haplotypes via neural posterior estimation
 
-This is the github repository that accompanies the thesis submitted towards M.Sc. in Mathematical and Theoretical Biology
-At Tel-Aviv University at Nov 27th 2022 by Itamar Caspi Under the supervision of Adi Stern and in collaboration with Yoav Ram.
+Repository that accompanies the paper:
+> Itamar Caspi, Moran Meir, Nadav Ben Nun, Uri Yakhini, Adi Stern, Yoav Ram. (2023) Mutation rate, selection, and epistasis inferred from RNA virus haplotypes via neural posterior estimation. bioRxiv. doi: [10.1101/2023.01.09.523230](https://doi.org/10.1101/2023.01.09.523230)
 
-The original LoopSeq fastq files of the empirical data are hosted on [SRA](https://www.ncbi.nlm.nih.gov/sra/PRJNA902661). 
-
-Some of the data necessary to fully run the analysis in this repo is hosted on [Zenodo](https://zenodo.org/record/7486851).
+## Data
+- Original LoopSeq fastq files of the empirical data are hosted on [SRA](https://www.ncbi.nlm.nih.gov/sra/PRJNA902661). 
+- Data for analysis in this repo is hosted on [Zenodo](https://zenodo.org/record/7486851).
 
 This repo was only tested on Linux. Since some operations use BLAST, Windows is not supported.
 
@@ -21,4 +21,17 @@ then use pip to install [sbi](https://www.mackelab.org/sbi):
 ```
 python -m pip install sbi==0.17.0
 ```
+Note that some of the notebooks require additional files which can be downloaded from [Zenodo](https://zenodo.org/record/7486851) using the direct links in the notebook or in the README.md files in their respective directories.
 
+## Repo overview
+
+This repo contains 3 notebooks for creating all the figures:
+ - [empirical_data_analysis.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/empirical_data_inference.ipynb) - Using the different inference methods to estimate posterior distributions from empirical data and create posterior predictive checks.
+ - [data_analysis/data_analysis.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/data_analysis/data_analysis.ipynb) - Exploring the empirical data.
+ - [synthetic_data_tests/synthetic_data_tests.ipynb](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/synthetic_data_tests/synthetic_data_tests.ipynb) - Analyzing inference methods on synthetic data.
+
+To understand the method and the pipeline, read the [inference_pipeline.py](https://github.com/Stern-Lab/ms2-mutation-rate/blob/main/inference_pipeline.py) file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the [model](https://github.com/Stern-Lab/ms2-mutation-rate/tree/main/model) directory.
+ 
+## License
+
+CC-BY-SA 4.0
