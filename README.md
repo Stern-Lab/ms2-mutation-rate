@@ -23,15 +23,15 @@ python -m pip install sbi==0.17.0
 ```
 Note that some of the notebooks require additional files which can be downloaded from [Zenodo](https://zenodo.org/record/7486851) using the direct links in the notebook or in the README.md files in their respective directories.
 
-## Overview
-#### Results
+## Repo overview
+
 This repo contains 3 notebooks for creating all the figures:
  - `empirical_data_analysis.ipynb` - Using the different inference methods to estimate posterior distributions from empirical data and create posterior predictive checks.
  - `data_analysis/data_analysis.ipynb` - Exploring the empirical data.
  - `synthetic_data_tests/synthetic_data_tests.ipynb` - Analyzing inference methods on synthetic data.
  - 
-####  Method
-To get a deeper understanding of the method and the entire simulations pipeline, the best approach would be to read the `inference_pipeline.py` file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the `model` directory.
+
+To understand the method and the pipeline, read the `inference_pipeline.py` file which outlines the entire process from creating simulations to training and testing the density estimators using functions located in the `model` directory.
  
 ## License
 
